@@ -69,6 +69,9 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     if (!connected)
     {
         WiFi.disconnect();
+        WiFi.mode(WIFI_OFF);
+        WiFi.forceSleepBegin();
+
         Serial.println(" timeout");
         return false;
     }
@@ -98,8 +101,11 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     const int cb = udp.parsePacket();
     if (!cb)
     {
-        Serial.println("no packet yet");
         WiFi.disconnect();
+        WiFi.mode(WIFI_OFF);
+        WiFi.forceSleepBegin();
+
+        Serial.println("no packet yet");
         return false;
     }
 
@@ -110,6 +116,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
 
     WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+    WiFi.forceSleepBegin();
 
     //the timestamp starts at byte 40 of the received packet and is four bytes,
     // or two words, long. First, esxtract the two words:
