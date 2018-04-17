@@ -7,4 +7,5 @@ static const char pass[] = "******";
 static const char *ntpServerName = "time.nist.gov";
 static const uint16_t localPort = 2390;
 
-static const int16_t timeZoneDiffer = 9;
+// Set time difference from UTC if your NTP server respond local time.
+static const int16_t timeZoneDiffer = 0;
