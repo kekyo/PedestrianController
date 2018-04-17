@@ -12,7 +12,7 @@
 #define TRANSITION_TIME 500   // 500msec (must fixed)
 
 #define TIME_SCHEDULE_ON 9
-#define TIME_SCHEDULE_OFF 6
+#define TIME_SCHEDULE_OFF 2
 
 // https://github.com/NorthernWidget/DS3231
 #include <DS3231.h>
@@ -156,6 +156,7 @@ void loop()
     {
         digitalWrite(WALK, LOW);
         digitalWrite(STOP, LOW);
+        delay(10 * 60 * 1000);
     }
 
     isFirst = false;
