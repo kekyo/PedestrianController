@@ -6,4 +6,4 @@ TODO: WIP
 
 ## License
 
-* Under Apache v2 without media directory.
+* Under Apache v2

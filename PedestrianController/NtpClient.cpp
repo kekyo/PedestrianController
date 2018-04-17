@@ -45,7 +45,7 @@ static void sendNtpPacket(WiFiUDP &udp, const IPAddress &address)
 
 ////////////////////////////////////////////////
 
-DateTime getNtpTimeValue()
+bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
 {
     // We start by connecting to a WiFi network
     Serial.print("Connecting to ");
@@ -53,12 +53,27 @@ DateTime getNtpTimeValue()
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid, pass);
 
-    while (WiFi.status() != WL_CONNECTED)
+    // 30sec
+    auto connected = false;
+    for (int i = 0; i < (timeoutSecond * 2); i++)
     {
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            connected = true;
+            break;
+        }
         delay(500);
         Serial.print(".");
     }
-    Serial.println("");
+
+    if (!connected)
+    {
+        WiFi.disconnect();
+        Serial.println(" timeout");
+        return false;
+    }
+
+    Serial.println(" connected");
 
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
@@ -85,7 +100,7 @@ DateTime getNtpTimeValue()
     {
         Serial.println("no packet yet");
         WiFi.disconnect();
-        return UINT32_MAX;
+        return false;
     }
 
     Serial.print("packet received, length=");
@@ -110,6 +125,9 @@ DateTime getNtpTimeValue()
 
     // subtract seventy years:
     const uint32_t epoch = secsSince1900 - seventyYears;
+    
+    const uint32_t localTime = epoch + (timeZoneDiffer * 3600);
 
-    return DateTime(epoch);
+    time = DateTime(epoch);
+    return true;
 }
