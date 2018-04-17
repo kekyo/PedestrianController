@@ -154,6 +154,8 @@ void loop()
     }
     else
     {
+        Serial.println("Sleeping 10minutes");
+
         digitalWrite(WALK, LOW);
         digitalWrite(STOP, LOW);
         delay(10 * 60 * 1000);
