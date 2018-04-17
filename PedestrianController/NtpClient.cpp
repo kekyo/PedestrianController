@@ -136,6 +136,6 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     
     const uint32_t localTime = epoch + (timeZoneDiffer * 3600);
 
-    time = DateTime(epoch);
+    time = DateTime(localTime);
     return true;
 }
