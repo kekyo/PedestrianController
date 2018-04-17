@@ -18,7 +18,7 @@ void setRtcTimeValue(const DateTime& time)
 
     ds3231.setClockMode(false); // set to 24h
 
-    ds3231.setYear(time.year());
+    ds3231.setYear(time.year() % 100);
     ds3231.setMonth(time.month());
     ds3231.setDate(time.day());
     ds3231.setHour(time.hour());
