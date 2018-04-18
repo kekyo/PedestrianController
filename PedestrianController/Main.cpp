@@ -43,7 +43,7 @@ static bool isDisplaying(const uint32_t timeout)
     Serial.print("Current time from RTC: ");
     Serial.println(currentTimeString);
 
-    if currentTime.day() != lastUpdatedDay)
+    if (currentTime.day() != lastUpdatedDay)
     {
         Serial.println();
         Serial.println("======================");
@@ -151,6 +151,4 @@ void loop()
 
         delay(10 * 60 * 1000);
     }
-
-    isFirst = false;
 }
