@@ -1,8 +1,8 @@
 #include <Wire.h>
 #include <user_interface.h>
 
-#define WALK 0    // ESP8266 (ESP-WROOM-02) IO0
-#define STOP 16   // ESP8266 (ESP-WROOM-02) IO16
+#define WALK 12   // ESP8266 (ESP-WROOM-02) IO12
+#define STOP 13   // ESP8266 (ESP-WROOM-02) IO13
 #define I2CSCL 5  // ESP8266 (ESP-WROOM-02) SCL
 #define I2CSDA 4  // ESP8266 (ESP-WROOM-02) SDA
 
