@@ -31,7 +31,9 @@ static String formatTime(const DateTime& time)
 
 ////////////////////////////////////////////////
 
-static bool isDisplaying(const bool force, const uint32_t timeout)
+static uint8_t lastUpdatedDay = 0;
+
+static bool isDisplaying(const uint32_t timeout)
 {
     const uint32_t start = millis();
     DateTime currentTime = getRtcTimeValue();
@@ -41,8 +43,7 @@ static bool isDisplaying(const bool force, const uint32_t timeout)
     Serial.print("Current time from RTC: ");
     Serial.println(currentTimeString);
 
-    if (force
-        || ((currentTime.hour() == 0) && (currentTime.minute() == 0) && (currentTime.second() == 0)))
+    if currentTime.day() != lastUpdatedDay)
     {
         Serial.println();
         Serial.println("======================");
@@ -57,6 +58,8 @@ static bool isDisplaying(const bool force, const uint32_t timeout)
             Serial.print("Got and updated time from NTP: ");
             Serial.println(currentTimeString);
         }
+
+        lastUpdatedDay = currentTime.day();
 
         Serial.println("======================");
         Serial.println();
@@ -109,11 +112,9 @@ void setup()
 
 ////////////////////////////////////////////////
 
-static bool isFirst = true;
-
 void loop()
 {
-    if (isDisplaying(isFirst, STOP_TIME))
+    if (isDisplaying(STOP_TIME))
     {
         Serial.print("Walking ...");
 
