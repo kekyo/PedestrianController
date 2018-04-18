@@ -4299,6 +4299,9 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <classes>
 <class number="0" name="default" width="0" drill="0">
 </class>
+<class number="1" name="AC110V" width="1.524" drill="0">
+<clearance class="1" value="0.8128"/>
+</class>
 </classes>
 <parts>
 <part name="IC1" library="PedestrianController" deviceset="ESP-WROOM-02" device="FRONT-FACE" value="ESP-WROOM-02"/>
@@ -4388,7 +4391,7 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <wire x1="129.54" y1="73.66" x2="129.54" y2="66.04" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="AC110V" class="0">
+<net name="AC110V" class="1">
 <segment>
 <pinref part="SSR1" gate="1" pin="DS2"/>
 <wire x1="154.94" y1="93.98" x2="160.02" y2="93.98" width="0.1524" layer="91"/>
@@ -4467,7 +4470,7 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <label x="180.34" y="53.34" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="ACCOM" class="0">
+<net name="ACCOM" class="1">
 <segment>
 <wire x1="187.96" y1="109.22" x2="175.26" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="175.26" y1="109.22" x2="175.26" y2="83.82" width="0.1524" layer="91"/>
@@ -4478,7 +4481,7 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <label x="180.34" y="83.82" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="WALK" class="0">
+<net name="WALK" class="1">
 <segment>
 <pinref part="CON4" gate="-1" pin="KL"/>
 <wire x1="187.96" y1="93.98" x2="167.64" y2="93.98" width="0.1524" layer="91"/>
@@ -4488,7 +4491,7 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 <label x="180.34" y="93.98" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="STOP" class="0">
+<net name="STOP" class="1">
 <segment>
 <pinref part="SSR2" gate="1" pin="DS1"/>
 <wire x1="154.94" y1="78.74" x2="167.64" y2="78.74" width="0.1524" layer="91"/>
@@ -4657,6 +4660,14 @@ Source: http://eshop.phoenixcontact.com .. 1729128.pdf</description>
 </nets>
 </sheet>
 </sheets>
+<errors>
+<approved hash="104,1,45.72,96.52,IC1,GND3,GND,,,"/>
+<approved hash="104,1,45.72,83.82,IC1,GND2,GND,,,"/>
+<approved hash="104,1,83.82,76.2,IC1,GND1,GND,,,"/>
+<approved hash="104,1,83.82,96.52,IC1,3V3,+3V3,,,"/>
+<approved hash="113,1,-20.0254,81.28,RSTSW,,,,,"/>
+<approved hash="113,1,-20.0254,60.96,PROGSW,,,,,"/>
+</errors>
 </schematic>
 </drawing>
 <compatibility>
