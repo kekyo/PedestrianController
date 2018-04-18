@@ -1,18 +1,7 @@
 #include <Wire.h>
 #include <user_interface.h>
 
-#define WALK 12   // ESP8266 (ESP-WROOM-02) IO12
-#define STOP 13   // ESP8266 (ESP-WROOM-02) IO13
-#define I2CSCL 5  // ESP8266 (ESP-WROOM-02) SCL
-#define I2CSDA 4  // ESP8266 (ESP-WROOM-02) SDA
-
-#define WALK_TIME 10000   // 10sec
-#define STOP_TIME 10000   // 10sec
-#define TRANSITION_COUNT 14
-#define TRANSITION_TIME 500   // 500msec (must fixed)
-
-#define TIME_SCHEDULE_ON 9
-#define TIME_SCHEDULE_OFF 2
+#include "PedestrianControllerConfig.h"
 
 // https://github.com/NorthernWidget/DS3231
 #include <DS3231.h>
@@ -154,10 +143,11 @@ void loop()
     }
     else
     {
-        Serial.println("Sleeping 10minutes");
+        Serial.println("Sleeping 10 minutes");
 
         digitalWrite(WALK, LOW);
         digitalWrite(STOP, LOW);
+
         delay(10 * 60 * 1000);
     }
 

@@ -8,10 +8,9 @@
 
 ////////////////////////////////////////////////
 
-#include "NetworkConfig.h"
+#include "PedestrianControllerConfig.h"
 
 static const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
-
 static byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
 
 ////////////////////////////////////////////////
@@ -49,9 +48,10 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
 {
     // We start by connecting to a WiFi network
     Serial.print("Connecting to ");
-    Serial.println(ssid);
+    Serial.println(WIFI_SSID);
+
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, pass);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
     // 30sec
     auto connected = false;
@@ -85,14 +85,14 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     Serial.println("Starting UDP");
 
     WiFiUDP udp;
-    udp.begin(localPort);
+    udp.begin(SNTP_SERVER_PORT);
 
     Serial.print("Local port: ");
     Serial.println(udp.localPort());
 
     //get a random server from the pool
     IPAddress timeServerIP;
-    WiFi.hostByName(ntpServerName, timeServerIP);
+    WiFi.hostByName(SNTP_SERVER_FQDN, timeServerIP);
 
     sendNtpPacket(udp, timeServerIP); // send an NTP packet to a time server
 
@@ -134,7 +134,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     // subtract seventy years:
     const uint32_t epoch = secsSince1900 - seventyYears;
     
-    const uint32_t localTime = epoch + (timeZoneDiffer * 3600);
+    const uint32_t localTime = epoch + LOCAL_TIMEZONE_FROM_UTC * 3600;
 
     time = DateTime(localTime);
     return true;
