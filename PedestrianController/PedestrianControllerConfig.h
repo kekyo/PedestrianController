@@ -3,11 +3,12 @@
 
 #define WALK 12   // ESP8266 (ESP-WROOM-02) IO12
 #define STOP 13   // ESP8266 (ESP-WROOM-02) IO13
+#define STATUS 14 // ESP8266 (ESP-WROOM-02) IO14
 #define I2CSCL 5  // ESP8266 (ESP-WROOM-02) SCL
 #define I2CSDA 4  // ESP8266 (ESP-WROOM-02) SDA
 
-#define WALK_TIME 10000   // 10sec
-#define STOP_TIME 10000   // 10sec
+#define WALK_TIME 15000   // 10sec
+#define STOP_TIME 15000   // 10sec
 #define TRANSITION_COUNT 14
 #define TRANSITION_TIME 500   // 500msec (must fixed)
 

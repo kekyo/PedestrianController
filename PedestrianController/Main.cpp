@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include <Ticker.h>
 #include <user_interface.h>
 
 #include "PedestrianControllerConfig.h"
@@ -27,6 +28,32 @@ static String formatTime(const DateTime& time)
     timeString += String(time.second(), DEC);
 
     return timeString;
+}
+
+static void ChangeBlinkState()
+{
+    digitalWrite(STATUS, !(digitalRead(STATUS)));
+}
+
+void BlinkStatus(const uint16_t msec)
+{
+    static Ticker ticker;
+
+    if (msec == 0)
+    {
+        ticker.detach();
+        digitalWrite(STATUS, LOW);
+    }
+    else if (msec == UINT16_MAX)
+    {
+        ticker.detach();
+        digitalWrite(STATUS, HIGH);
+    }
+    else
+    {
+        digitalWrite(STATUS, HIGH);
+        ticker.attach_ms(msec, ChangeBlinkState);
+    }
 }
 
 ////////////////////////////////////////////////
@@ -100,10 +127,13 @@ void setup()
     digitalWrite(WALK, LOW);
     digitalWrite(STOP, LOW);
 
+    BlinkStatus(UINT16_MAX);
+
     delay(100);
 
     pinMode(WALK, OUTPUT);
     pinMode(STOP, OUTPUT);
+    pinMode(STATUS, OUTPUT);
 
     Serial.println("    ");
 
@@ -116,6 +146,8 @@ void loop()
 {
     if (isDisplaying(STOP_TIME))
     {
+        BlinkStatus(0);
+
         Serial.print("Walking ...");
 
         digitalWrite(STOP, LOW);
@@ -148,6 +180,8 @@ void loop()
 
         digitalWrite(WALK, LOW);
         digitalWrite(STOP, LOW);
+
+        BlinkStatus(3000);
 
         delay(10 * 60 * 1000);
     }

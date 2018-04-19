@@ -13,6 +13,8 @@
 static const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
 static byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
 
+void BlinkStatus(const uint16_t msec);
+
 ////////////////////////////////////////////////
 
 // send an NTP request to the time server at the given address
@@ -50,6 +52,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     Serial.print("Connecting to ");
     Serial.println(WIFI_SSID);
 
+    BlinkStatus(600);
+
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
@@ -68,11 +72,17 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
 
     if (!connected)
     {
-        WiFi.disconnect();
-        WiFi.mode(WIFI_OFF);
-        WiFi.forceSleepBegin();
+        BlinkStatus(300);
+
+        //WiFi.mode(WIFI_OFF);
+        //WiFi.forceSleepBegin();
 
         Serial.println(" timeout");
+
+        delay(3000);
+
+        BlinkStatus(UINT16_MAX);
+
         return false;
     }
 
@@ -101,11 +111,18 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     const int cb = udp.parsePacket();
     if (!cb)
     {
+        BlinkStatus(100);
+
         WiFi.disconnect();
         WiFi.mode(WIFI_OFF);
         WiFi.forceSleepBegin();
 
         Serial.println("no packet yet");
+
+        delay(3000);
+        
+        BlinkStatus(UINT16_MAX);
+
         return false;
     }
 
@@ -118,6 +135,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
     WiFi.forceSleepBegin();
+
+    BlinkStatus(UINT16_MAX);
 
     //the timestamp starts at byte 40 of the received packet and is four bytes,
     // or two words, long. First, esxtract the two words:
