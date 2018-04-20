@@ -4,7 +4,7 @@
 
 ## What's this?
 
-* It's pedestrian signal controller running on ESP8266 (aka ESP-WROOM-32).
+* It's pedestrian signal controller running on ESP8266 (aka ESP-WROOM-02).
 * I made custom schematic and artwork from scratch.
   * Use EAGLE 8
 * I wrote sequencer code by C++ on ESP8266-Arduino IDE.
