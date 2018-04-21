@@ -7491,8 +7491,8 @@ Source: &lt;a href="http://www.farnell.com/datasheets/391100.pdf"&gt; Data sheet
 <part name="IC1" library="PedestrianController" deviceset="ESP-WROOM-02" device="FRONT-FACE" value="ESP-WROOM-02"/>
 <part name="SSR2" library="PedestrianController" deviceset="S?*" device="101T" package3d_urn="urn:adsk.eagle:package:24508/1" technology="02"/>
 <part name="SSR1" library="PedestrianController" deviceset="S?*" device="101T" package3d_urn="urn:adsk.eagle:package:24508/1" technology="02"/>
-<part name="R1" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="100"/>
-<part name="R2" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="100"/>
+<part name="R1" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="200"/>
+<part name="R2" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="200"/>
 <part name="R3" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="10K"/>
 <part name="R4" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="10K"/>
 <part name="GND1" library="PedestrianController" deviceset="GND" device=""/>
@@ -7525,11 +7525,13 @@ Source: &lt;a href="http://www.farnell.com/datasheets/391100.pdf"&gt; Data sheet
 <part name="R9" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="510"/>
 <part name="GND8" library="PedestrianController" deviceset="GND" device=""/>
 <part name="GND9" library="PedestrianController" deviceset="GND" device=""/>
-<part name="LED1" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value=""/>
-<part name="LED2" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value=""/>
-<part name="R10" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="510"/>
+<part name="LED1" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value="RH156"/>
+<part name="LED2" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value="RH156"/>
+<part name="R10" library="PedestrianController" deviceset="R-US_" device="0204/7" package3d_urn="urn:adsk.eagle:package:25945/1" value="510">
+<attribute name="SPICEPREFIX" value="R"/>
+</part>
 <part name="GND11" library="PedestrianController" deviceset="GND" device=""/>
-<part name="LED3" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value=""/>
+<part name="LED3" library="PedestrianController" deviceset="TLLR4400" device="" package3d_urn="urn:adsk.eagle:package:15797/1" value="RH156"/>
 <part name="C1" library="PedestrianController" deviceset="C-US" device="050-024X044" package3d_urn="urn:adsk.eagle:package:26162/1" value="100u"/>
 <part name="C2" library="PedestrianController" deviceset="C-US" device="050-024X044" package3d_urn="urn:adsk.eagle:package:26162/1" value="0.1u"/>
 <part name="+3V7" library="PedestrianController" deviceset="+3V3" device=""/>
