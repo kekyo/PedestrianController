@@ -122,7 +122,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     }
 
     Serial.println("WiFi connected.");
-    Serial.println("  IP address: ");
+    Serial.print("  IP address: ");
     Serial.println(WiFi.localIP());
 
     Serial.println("Starting UDP");
