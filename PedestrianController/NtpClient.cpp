@@ -64,31 +64,32 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         const int status = WiFi.status();
         if (lastStatus != status)
         {
+            Serial.print("  status = ");
             switch (status)
             {
                 case WL_CONNECTED:
-                    Serial.println("status = WL_CONNECTED");
+                    Serial.println("WL_CONNECTED");
                     break;
                 case WL_IDLE_STATUS:
-                    Serial.println("status = WL_IDLE_STATUS");
+                    Serial.println("WL_IDLE_STATUS");
                     break;
                 case WL_NO_SSID_AVAIL:
-                    Serial.println("status = WL_NO_SSID_AVAIL");
+                    Serial.println("WL_NO_SSID_AVAIL");
                     break;
                 case WL_SCAN_COMPLETED:
-                    Serial.println("status = WL_SCAN_COMPLETED");
+                    Serial.println("WL_SCAN_COMPLETED");
                     break;
                 case WL_CONNECT_FAILED:
-                    Serial.println("status = WL_CONNECT_FAILED");
+                    Serial.println("WL_CONNECT_FAILED");
                     break;
                 case WL_CONNECTION_LOST:
-                    Serial.println("status = WL_CONNECTION_LOST");
+                    Serial.println("WL_CONNECTION_LOST");
                     break;
                 case WL_DISCONNECTED:
-                    Serial.println("status = WL_DISCONNECTED");
+                    Serial.println("WL_DISCONNECTED");
                     break;
                 default:
-                    Serial.println("status = (Unknow)");
+                    Serial.println("(Unknow)");
                     break;
             }
 
@@ -111,7 +112,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         //WiFi.mode(WIFI_OFF);
         //WiFi.forceSleepBegin();
 
-        Serial.println(" timeout");
+        Serial.println("Timeout, give up.");
 
         delay(3000);
 
@@ -120,10 +121,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         return false;
     }
 
-    Serial.println(" connected");
-
-    Serial.println("WiFi connected");
-    Serial.println("IP address: ");
+    Serial.println("WiFi connected.");
+    Serial.println("  IP address: ");
     Serial.println(WiFi.localIP());
 
     Serial.println("Starting UDP");
@@ -131,7 +130,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     WiFiUDP udp;
     udp.begin(SNTP_SERVER_PORT);
 
-    Serial.print("Local port: ");
+    Serial.print("  Local port: ");
     Serial.println(udp.localPort());
 
     //get a random server from the pool
@@ -151,7 +150,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         WiFi.mode(WIFI_OFF);
         WiFi.forceSleepBegin();
 
-        Serial.println("no packet yet");
+        Serial.println("  no packet yet");
 
         delay(3000);
         
@@ -160,7 +159,7 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         return false;
     }
 
-    Serial.print("packet received, length=");
+    Serial.print("  packet received, length=");
     Serial.println(cb);
 
     // We've received a packet, read the data from it

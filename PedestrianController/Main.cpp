@@ -38,6 +38,7 @@ static void ChangeBlinkState()
     {
         case 0:
         case 1:
+        case 2:
             digitalWrite(STATUS, LOW);
             currentState++;
             break;
