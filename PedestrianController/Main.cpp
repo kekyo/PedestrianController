@@ -135,7 +135,7 @@ void setup()
 
     Wire.begin();
 
-    delay(200);
+    delay(500);
 
     digitalWrite(WALK, LOW);
     digitalWrite(STOP, LOW);
@@ -151,6 +151,8 @@ void setup()
     Serial.println("    ");
 
     wifi_set_sleep_type(LIGHT_SLEEP_T);
+
+    delay(200);
 }
 
 ////////////////////////////////////////////////

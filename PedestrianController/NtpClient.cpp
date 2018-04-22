@@ -57,17 +57,48 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    // 30sec
     auto connected = false;
+    int lastStatus = -1;
     for (int i = 0; i < (timeoutSecond * 2); i++)
     {
-        if (WiFi.status() == WL_CONNECTED)
+        const int status = WiFi.status();
+        if (status == WL_CONNECTED)
         {
             connected = true;
             break;
         }
-        delay(500);
-        Serial.print(".");
+
+        if (lastStatus != status)
+        {
+            switch (status)
+            {
+                case WL_IDLE_STATUS:
+                    Serial.println("status = WL_IDLE_STATUS");
+                    break;
+                case WL_NO_SSID_AVAIL:
+                    Serial.println("status = WL_NO_SSID_AVAIL");
+                    break;
+                case WL_SCAN_COMPLETED:
+                    Serial.println("status = WL_SCAN_COMPLETED");
+                    break;
+                case WL_CONNECT_FAILED:
+                    Serial.println("status = WL_CONNECT_FAILED");
+                    break;
+                case WL_CONNECTION_LOST:
+                    Serial.println("status = WL_CONNECTION_LOST");
+                    break;
+                case WL_DISCONNECTED:
+                    Serial.println("status = WL_DISCONNECTED");
+                    break;
+                default:
+                    Serial.println("status = (Unknow)");
+                    break;
+            }
+
+            lastStatus = status;
+        }
+
+        delay(100);
     }
 
     if (!connected)
