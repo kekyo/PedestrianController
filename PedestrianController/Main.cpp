@@ -7,7 +7,7 @@
 // https://github.com/NorthernWidget/DS3231
 #include <DS3231.h>
 
-bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond);
+bool getNtpTimeValue(DateTime& time);
 DateTime getRtcTimeValue();
 void setRtcTimeValue(const DateTime& time);
 
@@ -28,6 +28,18 @@ static String formatTime(const DateTime& time)
     timeString += String(time.second(), DEC);
 
     return timeString;
+}
+
+static uint32_t calculateTimeDifferent(const uint32_t start, const uint32_t end)
+{
+    if (end >= start)
+    {
+        return end - start;
+    }
+    else
+    {
+        return UINT32_MAX - start + end;
+    }
 }
 
 static void ChangeBlinkState()
@@ -74,7 +86,7 @@ void BlinkStatus(const uint16_t msec)
 
 static uint8_t lastUpdatedDay = 0;
 
-static bool isDisplaying(const uint32_t timeout)
+static uint32_t getSleepingSecond(const uint32_t timeoutMillisecond)
 {
     const uint32_t start = millis();
     DateTime currentTime = getRtcTimeValue();
@@ -90,10 +102,12 @@ static bool isDisplaying(const uint32_t timeout)
         Serial.println("======================");
         Serial.println("Time update start:");
 
-        if (getNtpTimeValue(currentTime, 30))
+        DateTime ntpTime;
+        if (getNtpTimeValue(ntpTime))
         {
-            setRtcTimeValue(currentTime);
+            setRtcTimeValue(ntpTime);
 
+            currentTime = ntpTime;
             currentTimeString = formatTime(currentTime);
 
             Serial.print("Got and updated time from NTP: ");
@@ -107,25 +121,35 @@ static bool isDisplaying(const uint32_t timeout)
     }
 
     const uint32_t end = millis();
-    if (end >= start)
+    const uint32_t differ = calculateTimeDifferent(start, end);
+    if (differ < timeoutMillisecond)
     {
-        auto differ = end - start;
-        if (differ < timeout)
-        {
-            delay(timeout - differ);
-        }
-    }
-    else
-    {
-        auto differ = UINT32_MAX - start + end;
-        if (differ < timeout)
-        {
-            delay(timeout - differ);
-        }
+        delay(timeoutMillisecond - differ);
     }
 
-    return (currentTime.hour() < TIME_SCHEDULE_OFF)
-        || (currentTime.hour() >= TIME_SCHEDULE_ON);
+    const uint8_t hour = currentTime.hour();
+
+#if (TIME_SCHEDULE_ON >= TIME_SCHEDULE_OFF)
+    if ((hour >= TIME_SCHEDULE_ON) || (hour < TIME_SCHEDULE_OFF))
+    {
+        return 0;
+    }
+#else
+    if ((hour >= TIME_SCHEDULE_ON) && (hour < TIME_SCHEDULE_OFF))
+    {
+        return 0;
+    }
+#endif
+
+    const DateTime next = DateTime(
+        currentTime.year(),
+        currentTime.month(),
+        ((hour > TIME_SCHEDULE_ON) ? 1 : 0) + currentTime.day(),
+        TIME_SCHEDULE_ON,
+        0,
+        0);
+
+    return (next.unixtime() - next.unixtime()) * 1000;
 }
 
 ////////////////////////////////////////////////
@@ -160,7 +184,8 @@ void setup()
 
 void loop()
 {
-    if (isDisplaying(STOP_TIME))
+    const uint32_t requireMillisecond = getSleepingSecond(STOP_TIME);
+    if (requireMillisecond == 0)
     {
         BlinkStatus(0);
 
@@ -192,13 +217,19 @@ void loop()
     }
     else
     {
-        Serial.println("Sleeping 10 minutes");
+        const uint32_t sleepMillisecond =
+            (requireMillisecond < (10 * 60 * 1000))
+                ? requireMillisecond
+                : (10 * 60 * 1000);
+
+        Serial.print("Sleeping ");
+        Serial.println(sleepMillisecond / (60 * 1000), DEC);
 
         digitalWrite(WALK, LOW);
         digitalWrite(STOP, LOW);
 
         BlinkStatus(3000);
 
-        delay(10 * 60 * 1000);
+        delay(sleepMillisecond);
     }
 }

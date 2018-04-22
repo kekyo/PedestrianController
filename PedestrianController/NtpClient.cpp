@@ -2,6 +2,7 @@
 
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
+#include <user_interface.h>
 
 // https://github.com/NorthernWidget/DS3231
 #include <DS3231.h>
@@ -46,8 +47,10 @@ static void sendNtpPacket(WiFiUDP &udp, const IPAddress &address)
 
 ////////////////////////////////////////////////
 
-bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
+bool getNtpTimeValue(DateTime& time)
 {
+    wifi_set_sleep_type(NONE_SLEEP_T);
+
     // We start by connecting to a WiFi network
     Serial.print("Connecting to ");
     Serial.println(WIFI_SSID);
@@ -57,9 +60,10 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     WiFi.mode(WIFI_STA);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
+    // 45sec
     auto connected = false;
     int lastStatus = -1;
-    for (int i = 0; i < (timeoutSecond * 2); i++)
+    for (int i = 0; i < 450; i++)
     {
         const int status = WiFi.status();
         if (lastStatus != status)
@@ -112,6 +116,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         //WiFi.mode(WIFI_OFF);
         //WiFi.forceSleepBegin();
 
+        wifi_set_sleep_type(LIGHT_SLEEP_T);
+
         Serial.println("Timeout, give up.");
 
         delay(3000);
@@ -150,6 +156,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
         WiFi.mode(WIFI_OFF);
         WiFi.forceSleepBegin();
 
+        wifi_set_sleep_type(LIGHT_SLEEP_T);
+
         Serial.println("  no packet yet");
 
         delay(3000);
@@ -168,6 +176,8 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
     WiFi.forceSleepBegin();
+
+    wifi_set_sleep_type(LIGHT_SLEEP_T);
 
     BlinkStatus(UINT16_MAX);
 
