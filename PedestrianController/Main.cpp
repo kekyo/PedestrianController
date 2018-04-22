@@ -32,7 +32,20 @@ static String formatTime(const DateTime& time)
 
 static void ChangeBlinkState()
 {
-    digitalWrite(STATUS, !(digitalRead(STATUS)));
+    static uint8_t currentState = 2;
+
+    switch (currentState)
+    {
+        case 0:
+        case 1:
+            digitalWrite(STATUS, LOW);
+            currentState++;
+            break;
+        default:
+            digitalWrite(STATUS, HIGH);
+            currentState = 0;
+            break;
+    }
 }
 
 void BlinkStatus(const uint16_t msec)
@@ -52,7 +65,7 @@ void BlinkStatus(const uint16_t msec)
     else
     {
         digitalWrite(STATUS, HIGH);
-        ticker.attach_ms(msec, ChangeBlinkState);
+        ticker.attach_ms(msec / 3, ChangeBlinkState);
     }
 }
 
