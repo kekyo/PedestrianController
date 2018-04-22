@@ -149,7 +149,7 @@ static uint32_t getSleepingSecond(const uint32_t timeoutMillisecond)
         0,
         0);
 
-    return (next.unixtime() - next.unixtime()) * 1000;
+    return (next.unixtime() - currentTime.unixtime()) * 1000;
 }
 
 ////////////////////////////////////////////////
