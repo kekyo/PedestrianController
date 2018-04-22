@@ -62,16 +62,13 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
     for (int i = 0; i < (timeoutSecond * 2); i++)
     {
         const int status = WiFi.status();
-        if (status == WL_CONNECTED)
-        {
-            connected = true;
-            break;
-        }
-
         if (lastStatus != status)
         {
             switch (status)
             {
+                case WL_CONNECTED:
+                    Serial.println("status = WL_CONNECTED");
+                    break;
                 case WL_IDLE_STATUS:
                     Serial.println("status = WL_IDLE_STATUS");
                     break;
@@ -96,6 +93,12 @@ bool getNtpTimeValue(DateTime& time, const uint16_t timeoutSecond)
             }
 
             lastStatus = status;
+
+            if (status == WL_CONNECTED)
+            {
+                connected = true;
+                break;
+            }
         }
 
         delay(100);
