@@ -27,6 +27,12 @@
 
 ![Artwork](images/Artwork.png)
 
+## How to assemble PedestrianController
+
+![Finished](images/Finished.jpg)
+
+* See also: [How to assemble PedestrianController](HowToAssemble.md)
+
 ## License
 
 * Under Apache v2
