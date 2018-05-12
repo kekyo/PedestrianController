@@ -11,6 +11,8 @@
 
 ![Prototyping](images/Prototyping2.jpg)
 
+* We record our discussion into YouTube: [Fun with Pedestrian Signal (In japanese)](https://youtu.be/vJiQ18ymqcs)
+
 ## Features
 
 * Basic sequence for american pedestrian signal standard (3 wired control).
@@ -20,8 +22,7 @@
 
 ## Schematic and artwork
 
-* I ordered PCB to [Fusion PCB](https://www.seeedstudio.com/fusion_pcb.html).
-  * TODO: Now in production ;)
+* I ordered PCB to [Fusion PCB](https://www.seeedstudio.com/fusion_pcb.html) and finished assemble.
 
 ![Schematic](images/Schematic.png)
 
