@@ -42,13 +42,15 @@ private:
 
     uint32_t lastTickCount;
     uint32_t delayCount;
+    uint32_t cuckooCount;
 
     enum States
     {
         Waiting1,
         Waiting2,
         WillWalk,
-        Walking,
+        Walking1,
+        Walking2,
         WillWait,
         Waiting0
     } currentState;
@@ -202,7 +204,6 @@ private:
 
             // Fall through
             case States::Waiting2:
-            case States::WillWalk:
                 pPlayer->play(WAIT_SOUND);
                 delay(300);
                 break;
@@ -230,17 +231,33 @@ private:
                     digitalWrite(PUMPED, LOW);
                     sendWalkToPedestrianSignal();
                     delayCount = millis();
-                    currentState = States::Walking;
+                    currentState = States::Walking1;
                 }
                 break;
 
-            case States::Walking:
+            case States::Walking1:
                 {
                     const auto now = millis();
                     if ((now - delayCount) >= (TRANSITION_WALKING * 1000))
                     {
                         sendStopToPedestrianSignal();
                         currentState = States::WillWait;
+                    }
+                    else
+                    {
+                        cuckooCount = millis();
+                        currentState = States::Walking2;
+                    }
+                }
+                break;
+
+            case States::Walking2:
+                {
+                    const auto now = millis();
+                    if ((now - cuckooCount) >= 1000)
+                    {
+                        pPlayer->play(CUCKOO_SOUND);
+                        currentState = States::Walking1;
                     }
                 }
                 break;
@@ -268,7 +285,7 @@ private:
 
 public:
     PedestrianSignalButton()
-        : pPlayer(nullptr), currentState(States::Waiting1), requestButton(REQUEST), lastTickCount(0), delayCount(0)
+        : pPlayer(nullptr), currentState(States::Waiting1), requestButton(REQUEST), lastTickCount(0), delayCount(0), cuckooCount(0)
     {
     }
 
