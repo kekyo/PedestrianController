@@ -43,6 +43,7 @@ private:
     uint32_t lastTickCount;
     uint32_t delayCount;
     uint32_t cuckooCount;
+    uint32_t demoCount;
 
     enum States
     {
@@ -214,6 +215,18 @@ private:
     {
         switch (currentState)
         {
+            case States::Waiting1:
+                demoCount--;
+                if (demoCount == 0)
+                {
+                    digitalWrite(PUMPED, HIGH);
+                    delayCount = millis();
+                    currentState = States::Waiting2;
+                    pPlayer->play(WAIT_SOUND);
+                    delay(300);
+                }
+                break;
+
             case States::Waiting2:
                 {
                     const auto now = millis();
@@ -276,6 +289,7 @@ private:
                     if ((now - delayCount) >= (TRANSITION_WAITING0 * 1000))
                     {
                         sendGoToRoadSignal();
+                        demoCount = TRANSITION_DEMO;
                         currentState = States::Waiting1;
                     }
                 }
@@ -285,7 +299,8 @@ private:
 
 public:
     PedestrianSignalButton()
-        : pPlayer(nullptr), currentState(States::Waiting1), requestButton(REQUEST), lastTickCount(0), delayCount(0), cuckooCount(0)
+        : pPlayer(nullptr), currentState(States::Waiting1), requestButton(REQUEST)
+        , lastTickCount(0), delayCount(0), cuckooCount(0), demoCount(TRANSITION_DEMO)
     {
     }
 

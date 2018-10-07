@@ -31,6 +31,7 @@
 #define TRANSITION_WAITING2 10   // second
 #define TRANSITION_WALKING 20    // second
 #define TRANSITION_WAITING0 3    // second
+#define TRANSITION_DEMO 30       // second
 
 // your network SSID (name)
 #define WIFI_SSID "MatrixSignalDemo"
