@@ -47,7 +47,7 @@ static void sendNtpPacket(WiFiUDP &udp, const IPAddress &address)
 
 ////////////////////////////////////////////////
 
-bool getNtpTimeValue(DateTime& time)
+bool getNtpTimeValue(DateTime& time, bool retry)
 {
     wifi_set_sleep_type(NONE_SLEEP_T);
 
@@ -133,45 +133,69 @@ bool getNtpTimeValue(DateTime& time)
 
     Serial.println("Starting UDP");
 
-    WiFiUDP udp;
-    udp.begin(SNTP_SERVER_PORT);
-
-    Serial.print("  Local port: ");
-    Serial.println(udp.localPort());
-
-    //get a random server from the pool
-    IPAddress timeServerIP;
-    WiFi.hostByName(SNTP_SERVER_FQDN, timeServerIP);
-
-    sendNtpPacket(udp, timeServerIP); // send an NTP packet to a time server
-
-    delay(1000);
-
-    const int cb = udp.parsePacket();
-    if (!cb)
+    do
     {
+        WiFiUDP udp;
+        udp.begin(SNTP_SERVER_PORT);
+
+        Serial.print("Local port: ");
+        Serial.println(udp.localPort());
+
+        //get a random server from the pool
+        IPAddress timeServerIP;
+        WiFi.hostByName(SNTP_SERVER_FQDN, timeServerIP);
+
+        sendNtpPacket(udp, timeServerIP); // send an NTP packet to a time server
+
+        delay(1000);
+
+        const int cb = udp.parsePacket();
+        if (cb)
+        {
+            Serial.print("  packet received, length=");
+            Serial.println(cb);
+
+            // We've received a packet, read the data from it
+            udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
+
+            WiFi.disconnect();
+            WiFi.mode(WIFI_OFF);
+            WiFi.forceSleepBegin();
+
+            wifi_set_sleep_type(LIGHT_SLEEP_T);
+
+            BlinkStatus(UINT16_MAX);
+
+            //the timestamp starts at byte 40 of the received packet and is four bytes,
+            // or two words, long. First, esxtract the two words:
+            const uint32_t highWord = word(packetBuffer[40], packetBuffer[41]);
+            const uint32_t lowWord = word(packetBuffer[42], packetBuffer[43]);
+
+            // combine the four bytes (two words) into a long integer
+            // this is NTP time (seconds since Jan 1 1900):
+            const uint32_t secsSince1900 = highWord << 16 | lowWord;
+
+            // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
+            const uint32_t seventyYears = 2208988800UL;
+
+            // subtract seventy years:
+            const uint32_t epoch = secsSince1900 - seventyYears;
+            
+            const uint32_t localTime = epoch + LOCAL_TIMEZONE_FROM_UTC * 3600;
+
+            time = DateTime(localTime);
+            return true;
+        }
+
         BlinkStatus(100);
-
-        WiFi.disconnect();
-        WiFi.mode(WIFI_OFF);
-        WiFi.forceSleepBegin();
-
-        wifi_set_sleep_type(LIGHT_SLEEP_T);
 
         Serial.println("  no packet yet");
 
-        delay(3000);
+        delay(1000);
         
         BlinkStatus(UINT16_MAX);
-
-        return false;
     }
-
-    Serial.print("  packet received, length=");
-    Serial.println(cb);
-
-    // We've received a packet, read the data from it
-    udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
+    while (retry);
 
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
@@ -179,25 +203,7 @@ bool getNtpTimeValue(DateTime& time)
 
     wifi_set_sleep_type(LIGHT_SLEEP_T);
 
-    BlinkStatus(UINT16_MAX);
+    delay(1000);
 
-    //the timestamp starts at byte 40 of the received packet and is four bytes,
-    // or two words, long. First, esxtract the two words:
-    const uint32_t highWord = word(packetBuffer[40], packetBuffer[41]);
-    const uint32_t lowWord = word(packetBuffer[42], packetBuffer[43]);
-
-    // combine the four bytes (two words) into a long integer
-    // this is NTP time (seconds since Jan 1 1900):
-    const uint32_t secsSince1900 = highWord << 16 | lowWord;
-
-    // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
-    const uint32_t seventyYears = 2208988800UL;
-
-    // subtract seventy years:
-    const uint32_t epoch = secsSince1900 - seventyYears;
-    
-    const uint32_t localTime = epoch + LOCAL_TIMEZONE_FROM_UTC * 3600;
-
-    time = DateTime(localTime);
-    return true;
+    return false;
 }

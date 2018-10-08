@@ -7,7 +7,7 @@
 // https://github.com/NorthernWidget/DS3231
 #include <DS3231.h>
 
-bool getNtpTimeValue(DateTime& time);
+bool getNtpTimeValue(DateTime& time, bool retry);
 DateTime getRtcTimeValue();
 void setRtcTimeValue(const DateTime& time);
 
@@ -86,7 +86,7 @@ void BlinkStatus(const uint16_t msec)
 
 static uint8_t lastUpdatedDay = 0;
 
-static uint32_t getSleepingSecond(const uint32_t timeoutMillisecond)
+static uint32_t getSleepingSecond(const uint32_t timeoutMillisecond, bool firstTime)
 {
     const uint32_t start = millis();
     DateTime currentTime = getRtcTimeValue();
@@ -103,7 +103,7 @@ static uint32_t getSleepingSecond(const uint32_t timeoutMillisecond)
         Serial.println("Time update start:");
 
         DateTime ntpTime;
-        if (getNtpTimeValue(ntpTime))
+        if (getNtpTimeValue(ntpTime, firstTime))
         {
             setRtcTimeValue(ntpTime);
 
@@ -182,9 +182,12 @@ void setup()
 
 ////////////////////////////////////////////////
 
+static bool firstTime = true;
+
 void loop()
 {
-    const uint32_t requireMillisecond = getSleepingSecond(STOP_TIME);
+    const uint32_t requireMillisecond = getSleepingSecond(STOP_TIME, firstTime);
+    firstTime = false;
     if (requireMillisecond == 0)
     {
         BlinkStatus(0);
