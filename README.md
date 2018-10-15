@@ -11,7 +11,15 @@
 
 ![Prototyping](images/Prototyping2.jpg)
 
+### Video
+
 * We record our discussion into YouTube: [Fun with Pedestrian Signal (In japanese)](https://youtu.be/vJiQ18ymqcs)
+
+### NT NAGOYA 2018 conference
+
+![NT NAGOYA 2018](images/nt_nagoya_2018.jpg)
+
+![NT NAGOYA 2018 marquee (Japanese)](images/nt_nagoya_2018_marquee.png)
 
 ## Features
 
