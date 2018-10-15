@@ -15,7 +15,12 @@
 
 * We record our discussion into YouTube: [Fun with Pedestrian Signal (In japanese)](https://youtu.be/vJiQ18ymqcs)
 
-### NT NAGOYA 2018 conference
+### NT NAGOYA 2018 conference (2018/10/6)
+
+* We did public and demonstration the MatrixSignalController.
+  * It uses with [the ExtremeFeedbackDevice's signal box.](https://github.com/kekyo/ExtremeFeedbackDevice)
+  * The three boxes chatting with independent WiFi network, we use http api server and client library.
+  * See [the "MatrixSignalController" folder](https://github.com/kekyo/PedestrianController/tree/master/MatrixSignalController) at repository.
 
 ![NT NAGOYA 2018](images/nt_nagoya_2018.jpg)
 
